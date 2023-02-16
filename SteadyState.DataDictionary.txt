@@ -1,0 +1,15 @@
+Data Dictionary
+
+Column	Description
+Group	A number (1,2,3, or 4) indicating the tank (5 fish, replicate 1; 5 fish replicate 2; 25 fish, replicate 1; 25 fish replicate 2)
+Fish_num	Number of fish in tank (5 or 25)
+Replicate	Replicate tank of each Fish_ Num (1 or 2)
+Time	Hour water sample was pulled for filtration.  Steady state was assumed to be reached at time 0 (0,3,6,9,12,18,24,30,36,48,72,96)
+Water_sample	 Water sample replicate number, at time 0 a total of 6 replicate water samples were taken, beyond time 0, a total of 3 water samples were taken at each time interval
+Volume_filtered	Volume of water filtered per sample, in liters
+Elution_volume	Volume of eluted sample from DNA extraction, in microliters
+Reaction_volume	Volume of qPCR reaction (fixed at 25uL)
+Template	Volume of template added to qPCR reaction (fixed at 6uL)
+qPCR_replicate	qPCR replicate number (1?6)
+Ct_value	Cycling threshold from quantitative PCR
+Temperature	Temperature (Celsius) in each tank taken from temperature loggers.

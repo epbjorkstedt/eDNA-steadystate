@@ -1,0 +1,5 @@
+tank weight
+Tank5.1 56.5
+Tank5.2 56.6
+Tank25.1 404.9
+Tank25.2 390
