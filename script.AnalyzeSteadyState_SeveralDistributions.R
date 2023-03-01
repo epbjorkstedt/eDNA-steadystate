@@ -19,19 +19,19 @@ require(mgcv)
 require(lme4)
 require(lmerTest)
 require(MuMIn)
-library(nlsMicrobio)
-library(AICcmodavg)
-library(dplyr)
-library(ggplot2)
-library(tidybayes)
+require(nlsMicrobio)
+require(AICcmodavg)
+require(dplyr)
+require(ggplot2)
+require(tidybayes)
 
 #Set working directory
-setwd("/Users/apk7001/Desktop/Decay")
+# setwd("/Users/apk7001/Desktop/Decay")
 
 
 
 #Load data
-data <-read.csv(file="Decay.Data.csv", header=TRUE, as.is=TRUE)
+data <-read.csv(file="./Decay.Data.csv", header=TRUE, as.is=TRUE)
 
 #Convert Ct value to copies/reaction in qPCR reaction
 #Slope and intercept from qPCR standard curve for O. mykiss
