@@ -15,16 +15,16 @@ require(ggplot2)
 require(tidybayes)
 require(cmocean)
 
-nIter <- 100
-modInterval <- floor(nIter/20)
+nIter <- 200
+modInterval <- floor(nIter/100)
 
 eDNA_base <- data.frame(time = 0,
                    size_class = seq(from=-2, to=-0.2, by=0.2)) %>% 
   dplyr::mutate(size_class = 10^size_class) %>%     # size classes
-  dplyr::mutate(eDNAconc = 5*size_class^0.667) %>%  # eDNA load per particle
+  dplyr::mutate(eDNAconc = 50*size_class^0.667) %>%  # eDNA load per particle
   dplyr::mutate(k = (1/size_class)^1/4) %>%         # decay rates
-  dplyr::mutate(k = k*0.05) %>%                     # decay rates
-  dplyr::mutate(a = 0.15*size_class^(2/3) ) %>%     # degradation rates surface:volume scaling
+  dplyr::mutate(k = k*0.005) %>%                     # decay rates
+  dplyr::mutate(a = 0.015*size_class^(2/3) ) %>%     # degradation rates surface:volume scaling
   dplyr::mutate(N = (1/size_class)^1/4)             # original particle concentrations
 
 eDNA <- eDNA_experiment <- eDNA_base
@@ -93,7 +93,7 @@ logSizeClass_plot_SimpleDecay <- logSizeClass_plot
 
 eDNA <- eDNA_experiment <- eDNA_base
 
-decayMatrix <- diag(exp(-eDNA_base$k))
+# decayMatrix <- diag(exp(-eDNA_base$k))
 degraMatrix <- diag(1-eDNA_base$a)
 for (i in 1:(dim(degraMatrix)[1]-1)) {
   degraMatrix[i,i+1] <- eDNA_base$a[i+1]
@@ -105,7 +105,7 @@ for (i in 1:(dim(degraMatrix)[1]-1)) {
 
 for (time in seq(nIter + 3)) {
   eDNA <- eDNA %>% 
-    dplyr::mutate(N = decayMatrix%*%N) %>% 
+    # dplyr::mutate(N = decayMatrix%*%N) %>% 
     dplyr::mutate(N = degraMatrix%*%N) %>% 
     dplyr::mutate(time = time + 1)
   eDNA_experiment <- eDNA_experiment %>% 
@@ -168,18 +168,17 @@ sizeClass_barplot_degra <- ggplot(data = eDNA_distributions,aes(fill=size_class,
 
 eDNA <- eDNA_experiment <- eDNA_base
 
-decayMatrix <- diag(exp(-eDNA_base$k))
-degraMatrix <- diag(1-eDNA_base$a)
 
-decdegMatrix <- decayMatrix * degraMatrix
-
+decdegMatrix <- diag(exp(-eDNA_base$k) * (1-eDNA_base$a))
+for (i in seq(2,dim(degraMatrix)[1])) {
+  decdegMatrix[i-1,i] <- eDNA_base$a[i]
+}
 
 
 
 for (time in seq(nIter + 3)) {
   eDNA <- eDNA %>% 
     dplyr::mutate(N = decdegMatrix%*%N) %>% 
-    # dplyr::mutate(N = degraMatrix%*%N) %>% 
     dplyr::mutate(time = time + 1)
   eDNA_experiment <- eDNA_experiment %>% 
     bind_rows(eDNA)
@@ -229,9 +228,14 @@ sizeClass_plot_degra <- ggplot(data = eDNA_distributions) +
   geom_line(aes(x=size_class,y=N,group=time,color=time)) +
   scale_x_log10()
 
-logSizeClass_plot_decdeg <- sizeClass_plot +
+logSizeClass_plot_decdeg <- sizeClass_plot_degra +
   scale_y_log10() 
 
 sizeClass_barplot_decdeg <- ggplot(data = eDNA_distributions,aes(fill=size_class,y=N,x=time)) + 
   geom_bar(position="fill", stat="identity") + 
+  scale_fill_cmocean(name='haline')
+
+
+sizeClass_barplot_decdeg <- ggplot(data = eDNA_distributions,aes(fill=size_class,y=N,x=time)) + 
+  geom_bar(stat="identity") + 
   scale_fill_cmocean(name='haline')
