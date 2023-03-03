@@ -231,7 +231,7 @@ sizeClass_plot_degra <- ggplot(data = eDNA_distributions) +
 logSizeClass_plot_decdeg <- sizeClass_plot_degra +
   scale_y_log10() 
 
-sizeClass_barplot_decdeg <- ggplot(data = eDNA_distributions,aes(fill=size_class,y=N,x=time)) + 
+sizeClass_pct_barplot_decdeg <- ggplot(data = eDNA_distributions,aes(fill=size_class,y=N,x=time)) + 
   geom_bar(position="fill", stat="identity") + 
   scale_fill_cmocean(name='haline')
 
